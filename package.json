@@ -8,7 +8,7 @@
     "format": "prettier --write '**/*.{ts,js,json}'",
     "lint": "tsc && eslint --max-warnings=0 src && prettier --check '**/*.{ts,js,json}'",
     "build": "esbuild src/main.ts --minify --bundle --sourcemap --outfile=dist/run_code_main.js",
-    "update-pages": "ghp-import --push dist"
+    "update-pages": "uvx ghp-import --push dist"
   },
   "author": "Samuel Colvin",
   "license": "MIT",

@@ -1,5 +1,9 @@
 # Example docs
 
+<script>
+  window.mkdocs_run_deps = ["pydantic==2.11.7", "pydantic-core==2.33.2", "pydantic-extra-types==2.10.0"]
+</script>
+
 ```py title="Pydantic Example"
 from datetime import datetime
 from typing import Tuple

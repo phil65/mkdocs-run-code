@@ -50,12 +50,18 @@ async function load(dependencies: string[]) {
     await pyodide.loadPackage(['micropip'])
     const micropip = pyodide.pyimport('micropip')
 
+    // this is required to avoid the pydantic-core install installign the wrong version of typing-extensions
+    await micropip.install(['typing-extensions>=4.14.1'])
+
     // pydantic-core requires special handling as it's installed from the file on the github release
     const pydantic_core_dep = dependencies.find(d => d.startsWith('pydantic-core'))
     if (pydantic_core_dep) {
       const pyd_c = pydantic_core_dep.split('==')[1]
-      const {platform} = (pyodide as any)._api.lockfile_info
-      const pydantic_core_wheel = `https://githubproxy.samuelcolvin.workers.dev/pydantic/pydantic-core/releases/download/v${pyd_c}/pydantic_core-${pyd_c}-cp311-cp311-${platform}_wasm32.whl`
+      const { platform } = (pyodide as any)._api.lockfile_info
+      const version_info = (pyodide.pyimport('sys') as any).version_info
+      const pv = `cp${version_info.major}${version_info.minor}`
+
+      const pydantic_core_wheel = `https://githubproxy.samuelcolvin.workers.dev/pydantic/pydantic-core/releases/download/v${pyd_c}/pydantic_core-${pyd_c}-${pv}-${pv}-${platform}_wasm32.whl`
       console.debug(`Installing pydantic-core from "${pydantic_core_wheel}"...`)
       await micropip.install([pydantic_core_wheel])
     }
