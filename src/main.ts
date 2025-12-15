@@ -172,9 +172,8 @@ class CodeBlock {
       }
     }
 
-    // for backwards compatibility
-    const default_deps = ['pydantic_core_version==2.6.3', 'pydantic_version==2.3.0']
-    const dependencies = window.mkdocs_run_deps || default_deps
+    // Use configured deps or empty array (no deps by default)
+    const dependencies = window.mkdocs_run_deps || []
     runCode(python_code, this.onMessage, dependencies)
   }
 
