@@ -49,7 +49,7 @@ function importScripts(url: string): Promise<void> {
 
 export async function downloadPyodide(): Promise<Pyodide> {
   await importScripts(
-    'https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js',
+    'https://cdn.jsdelivr.net/pyodide/v0.29.0/full/pyodide.js',
   )
   return await loadPyodide()
 }
