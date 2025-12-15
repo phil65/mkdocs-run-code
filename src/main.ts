@@ -50,8 +50,18 @@ declare global {
 async function main() {
   await load_css()
   window.code_blocks = []
-  document.querySelectorAll('.language-py, .language-python').forEach((block) => {
-    window.code_blocks.push(new CodeBlock(block))
+  // Only target Python blocks that have the .interactive class
+  // Usage: ```python { .interactive }
+  document.querySelectorAll('.interactive.highlight').forEach((block) => {
+    // Verify it's a Python block by checking for python-related classes or content
+    const code = block.querySelector('code')
+    if (code && (code.classList.contains('language-python') ||
+                 code.classList.contains('language-py') ||
+                 block.classList.contains('language-python') ||
+                 block.classList.contains('language-py') ||
+                 code.querySelector('.nb, .nf, .k'))) {  // pygments python tokens
+      window.code_blocks.push(new CodeBlock(block))
+    }
   })
 }
 main()
