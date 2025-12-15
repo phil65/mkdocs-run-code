@@ -50,26 +50,30 @@ async function load(dependencies: string[]) {
     await pyodide.loadPackage(['micropip'])
     const micropip = pyodide.pyimport('micropip')
 
-    // this is required to avoid the pydantic-core install installign the wrong version of typing-extensions
-    await micropip.install(['typing-extensions>=4.14.1'])
+    // Install dependencies if any
+    if (dependencies.length > 0) {
+      // pydantic-core requires special handling as it's installed from the file on the github release
+      const pydantic_core_dep = dependencies.find(d => d.startsWith('pydantic-core'))
+      if (pydantic_core_dep) {
+        // typing-extensions needed for pydantic-core
+        await micropip.install(['typing-extensions>=4.14.1'])
 
-    // pydantic-core requires special handling as it's installed from the file on the github release
-    const pydantic_core_dep = dependencies.find(d => d.startsWith('pydantic-core'))
-    if (pydantic_core_dep) {
-      const pyd_c = pydantic_core_dep.split('==')[1]
-      const { platform } = (pyodide as any)._api.lockfile_info
-      const version_info = (pyodide.pyimport('sys') as any).version_info
-      const pv = `cp${version_info.major}${version_info.minor}`
+        const pyd_c = pydantic_core_dep.split('==')[1]
+        const { platform } = (pyodide as any)._api.lockfile_info
+        const version_info = (pyodide.pyimport('sys') as any).version_info
+        const pv = `cp${version_info.major}${version_info.minor}`
 
-      const pydantic_core_wheel = `https://githubproxy.samuelcolvin.workers.dev/pydantic/pydantic-core/releases/download/v${pyd_c}/pydantic_core-${pyd_c}-${pv}-${pv}-${platform}_wasm32.whl`
-      console.debug(`Installing pydantic-core from "${pydantic_core_wheel}"...`)
-      await micropip.install([pydantic_core_wheel])
+        const pydantic_core_wheel = `https://githubproxy.samuelcolvin.workers.dev/pydantic/pydantic-core/releases/download/v${pyd_c}/pydantic_core-${pyd_c}-${pv}-${pv}-${platform}_wasm32.whl`
+        console.debug(`Installing pydantic-core from "${pydantic_core_wheel}"...`)
+        await micropip.install([pydantic_core_wheel])
+      }
+
+      const other_deps = dependencies.filter(d => !d.startsWith('pydantic-core'))
+      if (other_deps.length > 0) {
+        console.debug(`Installing ${other_deps}...`)
+        await micropip.install(other_deps)
+      }
     }
-
-    const other_deps = dependencies.filter(d => !d.startsWith('pydantic-core'))
-
-    console.debug(`Installing ${other_deps}...`)
-    await micropip.install(other_deps)
 
     await pyodide.runPythonAsync(
       // language=python
@@ -109,10 +113,6 @@ export async function runCode(
     updateOut = null
     throw e
   }
-  await py.pyodide.runPythonAsync(`
-import pydantic, pydantic_core
-print(f'pydantic version: v{pydantic.__version__}, pydantic-core version: v{pydantic_core.__version__}')
-`)
   try {
     await py.pyodide.runPythonAsync(code)
     update()
