@@ -9,13 +9,13 @@ import './run_code.css'
 
 function getUrl(filename: string, query?: URLSearchParams): string {
   const srcEl: HTMLScriptElement | null = document.querySelector(
-    'script[src*="run_code_main.js"]',
+    'script[src*="run_code.js"]',
   )
   if (srcEl) {
     const url = new URL(srcEl.src)
     url.search = ''
     // remove the filename from the pathname
-    url.pathname = url.pathname.replace('run_code_main.js', '')
+    url.pathname = url.pathname.replace('run_code.js', '')
     url.pathname += filename
     if (query) {
       url.search = '?' + query.toString()
