@@ -53,7 +53,9 @@ async function load(dependencies: string[]) {
     // Install dependencies if any
     if (dependencies.length > 0) {
       // pydantic-core requires special handling as it's installed from the file on the github release
-      const pydantic_core_dep = dependencies.find(d => d.startsWith('pydantic-core'))
+      const pydantic_core_dep = dependencies.find((d) =>
+        d.startsWith('pydantic-core'),
+      )
       if (pydantic_core_dep) {
         // typing-extensions needed for pydantic-core
         await micropip.install(['typing-extensions>=4.14.1'])
@@ -64,11 +66,15 @@ async function load(dependencies: string[]) {
         const pv = `cp${version_info.major}${version_info.minor}`
 
         const pydantic_core_wheel = `https://githubproxy.samuelcolvin.workers.dev/pydantic/pydantic-core/releases/download/v${pyd_c}/pydantic_core-${pyd_c}-${pv}-${pv}-${platform}_wasm32.whl`
-        console.debug(`Installing pydantic-core from "${pydantic_core_wheel}"...`)
+        console.debug(
+          `Installing pydantic-core from "${pydantic_core_wheel}"...`,
+        )
         await micropip.install([pydantic_core_wheel])
       }
 
-      const other_deps = dependencies.filter(d => !d.startsWith('pydantic-core'))
+      const other_deps = dependencies.filter(
+        (d) => !d.startsWith('pydantic-core'),
+      )
       if (other_deps.length > 0) {
         console.debug(`Installing ${other_deps}...`)
         await micropip.install(other_deps)
