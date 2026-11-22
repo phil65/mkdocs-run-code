@@ -22,7 +22,7 @@ function getUrl(filename: string, query?: URLSearchParams): string {
     }
     return url.toString()
   } else {
-    throw new Error('could not find script tag for `run_code_main.js`.')
+    throw new Error('could not find script tag for `run_code.js`.')
   }
 }
 
@@ -32,9 +32,11 @@ function load_css(): Promise<void> {
     const link = document.createElement('link')
     link.type = 'text/css'
     link.rel = 'stylesheet'
-    link.href = getUrl('run_code_main.css')
+    link.href = getUrl('run_code.css')
     head.appendChild(link)
     link.addEventListener('load', () => resolve())
+    // don't block setup if the stylesheet can't be loaded
+    link.addEventListener('error', () => resolve())
   })
 }
 
@@ -55,11 +57,14 @@ async function main() {
   document.querySelectorAll('.interactive.highlight').forEach((block) => {
     // Verify it's a Python block by checking for python-related classes or content
     const code = block.querySelector('code')
-    if (code && (code.classList.contains('language-python') ||
-                 code.classList.contains('language-py') ||
-                 block.classList.contains('language-python') ||
-                 block.classList.contains('language-py') ||
-                 code.querySelector('.nb, .nf, .k'))) {  // pygments python tokens
+    if (
+      code &&
+      (code.classList.contains('language-python') ||
+        code.classList.contains('language-py') ||
+        block.classList.contains('language-python') ||
+        block.classList.contains('language-py') ||
+        code.querySelector('.nb, .nf, .k')) // pygments python tokens
+    ) {
       window.code_blocks.push(new CodeBlock(block))
     }
   })
