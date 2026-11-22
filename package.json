@@ -1,8 +1,26 @@
 {
-  "name": "run-code",
+  "name": "mkdocs-run-code",
   "version": "0.0.1",
-  "description": "Run code in mkdocs",
-  "main": "src/index.js",
+  "private": true,
+  "description": "Run Python code blocks in MkDocs Material sites in the browser with Pyodide",
+  "keywords": [
+    "mkdocs",
+    "mkdocs-material",
+    "pyodide",
+    "python",
+    "codemirror",
+    "documentation",
+    "interactive",
+    "code-runner"
+  ],
+  "homepage": "https://github.com/phil65/mkdocs-run-code#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phil65/mkdocs-run-code.git"
+  },
+  "bugs": {
+    "url": "https://github.com/phil65/mkdocs-run-code/issues"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write '**/*.{ts,js,json}'",
