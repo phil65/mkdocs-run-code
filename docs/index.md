@@ -1,10 +1,10 @@
 # Example docs
 
 <script>
-  window.mkdocs_run_deps = ["pydantic==2.11.7", "pydantic-core==2.33.2", "pydantic-extra-types==2.10.0"]
+  window.mkdocs_run_deps = ["pydantic"]
 </script>
 
-```py title="Pydantic Example"
+```py { .interactive title="Pydantic Example" }
 from datetime import datetime
 from typing import Tuple
 
@@ -30,7 +30,7 @@ Some more text here.
 
 Here we go:
 
-```py title="Validation Successful"
+```py { .interactive title="Validation Successful" }
 from datetime import datetime
 
 from pydantic import BaseModel, PositiveInt
