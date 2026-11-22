@@ -8,6 +8,7 @@
     "strict": true,
     "preserveConstEnums": true,
     "sourceMap": true,
+    "noEmit": true,
     "esModuleInterop": true
   },
   "include": ["src"],
